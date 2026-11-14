@@ -16,6 +16,7 @@ const args = process.argv.slice(2);
 const json = args.includes('--json');
 const dir = resolve(args.find((a) => !a.startsWith('--')) ?? '.');
 
+/** Listing text is required for the 12 launch locales; the platform's 8 newer locales are optional. */
 const LOCALES = ['en', 'vi', 'zh-hans', 'hi', 'es', 'fr', 'ar', 'bn', 'pt-br', 'ru', 'ur', 'id'];
 const ALLOWED = new Set(['js', 'json', 'wasm', 'webp', 'png', 'jpg', 'jpeg', 'ogg', 'mp3', 'woff2']);
 const CODE = /\.(ts|tsx|js|jsx|mjs|svelte|vue)$/;
@@ -49,7 +50,7 @@ if (manifest) {
 	if (kind === 'lockstep' && !manifest.realtime?.snapshotRate)
 		add('warn', 'game.json', 0, 'lockstep with snapshotRate 0 sends one tick a second: use about 10');
 	const listing = manifest.listing && join(dir, manifest.listing);
-	if (!listing || !existsSync(listing)) add('error', 'game.json', 0, 'listing folder missing (all 12 locales)');
+	if (!listing || !existsSync(listing)) add('error', 'game.json', 0, 'listing folder missing (the 12 launch locales are required)');
 	else for (const l of LOCALES) if (!existsSync(join(listing, `${l}.json`))) add('error', `${manifest.listing}/${l}.json`, 0, 'missing listing locale');
 	const messages = manifest.messages && join(dir, manifest.messages);
 	if (!messages || !existsSync(join(messages, 'en.json'))) add('error', 'game.json', 0, 'messages/en.json missing');

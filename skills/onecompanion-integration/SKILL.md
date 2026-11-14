@@ -1,6 +1,6 @@
 ---
 name: onecompanion-integration
-description: Integrate a browser game (JavaScript or TypeScript, any engine) with the OneCompanion games platform and get it ready to upload: the mount()/dispose() client contract, game.json, in-game text through t() with ICU plurals and right-to-left layout, saved data through options.storage, assets that load inside the sandboxed frame, relay/lockstep/server multiplayer byte protocols, the 12-locale store listing, art, rights, size budgets, and the onecompanion-game CLI (validate, publish, release). Use this whenever someone wants to publish, port, upgrade, adapt or "make work on" OneCompanion (onecompanion.net), mentions game.json, mount(host, options), onecompanion-game, the OneCompanion studio page or developer guide, or is building a game they plan to put on OneCompanion, even if they only say "the platform" in a project that has a game.json with "manifest": 1.
+description: Integrate a browser game (JavaScript or TypeScript, any engine) with the OneCompanion games platform and get it ready to upload: the mount()/dispose() client contract, game.json, in-game text through t() with ICU plurals and right-to-left layout, saved data through options.storage, assets that load inside the sandboxed frame, relay/lockstep/server multiplayer byte protocols, the store listing (12 required locales of 20, with the CLI's i18n command), art, rights, size budgets, and the onecompanion-game CLI (validate, publish, release). Use this whenever someone wants to publish, port, upgrade, adapt or "make work on" OneCompanion (onecompanion.net), mentions game.json, mount(host, options), onecompanion-game, the OneCompanion studio page or developer guide, or is building a game they plan to put on OneCompanion, even if they only say "the platform" in a project that has a game.json with "manifest": 1.
 ---
 
 # OneCompanion integration
@@ -32,6 +32,8 @@ Work in this order. Do not skip the plan.
    - where player-facing text lives; how it saves; any network code; asset types and how they are loaded;
    - which room kind fits (see below); anything that cannot work in the sandbox (see `references/engines.md`).
    Ask the user for the game `id` (it becomes the URL and can **never** be reused) and their studio handle.
+   No game yet? `bunx github:onecompanion-net/game-cli init <dir> --template solo|relay|lockstep` writes a small
+   playable game on the contract that passes `validate`; build on it instead of these steps.
 2. **Contract.** Copy `templates/contract.ts` into `src/contract.ts`. Make a client entry (`src/client.ts`) that exports
    `mount(host, options)` and returns `{ onMessage, pause, resume, dispose }`. Start from `templates/client.ts`. Keep
    the game's existing standalone entry working if it has one: the platform only builds `entry.client`.
@@ -46,8 +48,10 @@ Work in this order. Do not skip the plan.
 7. **Network.** Remove every `fetch`/WebSocket/XHR to other hosts. For multiplayer use `options.online.send()` and
    `onMessage()` with the exact byte formats in `references/multiplayer.md`; templates: `templates/relay.ts`,
    `templates/lockstep.ts`.
-8. **Package.** Write `game.json` (start from `templates/game.json`; fields in `references/manifest.md`), the listing
-   for all 12 locales, the art at exact sizes, the rating, and `rights` with every third-party asset and licence.
+8. **Package.** Write `game.json` (start from `templates/game.json`; fields in `references/manifest.md`),
+   `listing/en.json` (with `play` and `modes` lines if they fit), the art at exact sizes, the rating, and `rights` with
+   every third-party asset and licence. Then run the `i18n` script and translate every file it marks
+   `$untranslated` (the 12 launch locales are required), deleting each marker as you finish that file.
 9. **Test locally.** Copy `templates/dev/` (an `index.html` and `dev.ts` host): solo, `?net=room` in two tabs (relay),
    `?lang=vi`, `?dir=rtl`.
 10. **Check.** Run `node <this skill>/scripts/preflight.mjs .` (or `bun …`) for the traps the CLI cannot see, then the

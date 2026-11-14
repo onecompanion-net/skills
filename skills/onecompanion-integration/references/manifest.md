@@ -16,9 +16,9 @@ Two shapes share one schema. The **source** manifest is what you write (entries 
 | `entry.client`             | relative path to your client entry (`./src/client.ts`).                                                |
 | `entry.server`             | only for kind `server`.                                                                                |
 | `realtime`                 | `{ kind, tickRate, snapshotRate, protocol }`; see below. Omit for solo-only (kind defaults to `none`).  |
-| `locales`                  | in-game text you ship; must include `en`; any of the 12 platform locales.                               |
+| `locales`                  | in-game text you ship; must include `en`; any of the 20 platform locales.                               |
 | `messages`                 | folder with `<locale>.json` for each of `locales`.                                                     |
-| `listing`                  | folder with `<locale>.json` for **all 12** platform locales. *Required for upload.*                     |
+| `listing`                  | folder with `<locale>.json` for the **12 launch** locales (others optional). *Required for upload.*     |
 | `media.cover`              | 1280×720 `.webp`.                                                                                      |
 | `media.stills`             | 3 to 8 × 1280×720 `.webp`, each with a 320×180 `<name>-thumb.webp` beside it. *3+ required for upload.* |
 | `media.share`              | 1200×630 `.jpg`. *Required for upload.*                                                                |
@@ -27,7 +27,8 @@ Two shapes share one schema. The **source** manifest is what you write (entries 
 | `rating`                   | `{ level: everyone \| teen \| mature, descriptors: string[] (≤ 8, ≤ 40 chars) }`. *Required for upload.* |
 | `rights`                   | `{ ownsAllContent: true, thirdParty: [{ name, licence, url }] }` (≤ 50). *Required for upload.*         |
 
-The 12 platform locales: `en vi zh-hans hi es fr ar bn pt-br ru ur id`.
+The 20 platform locales: the 12 launch locales `en vi zh-hans hi es fr ar bn pt-br ru ur id` (listing required) and
+`ja ko de tr th fil it pl` (listing optional; players there see the English listing until you add theirs).
 
 ## realtime
 

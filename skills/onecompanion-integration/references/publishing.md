@@ -52,7 +52,7 @@ uploading → in_review → approved → published → superseded
 ## What reviewers check
 
 - It works; `dispose()` cleans up; no console errors on start.
-- Every string goes through `t`; the listing is complete and natural in all 12 locales; the layout works right-to-left.
+- Every string goes through `t`; the listing is complete and natural in the 12 launch locales (and any others you ship); the layout works right-to-left.
 - The rating matches the content; `rights` lists every third-party asset and its licence (code libraries, fonts,
   sounds, art).
 - It respects players: no deceptive design, no personal data, no ads or payments (hosted games are free).

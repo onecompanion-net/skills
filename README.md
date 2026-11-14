@@ -6,7 +6,7 @@ and runs its multiplayer rooms.
 
 | Skill                                                                  | What it does                                                                                                                                                                                                 |
 | ---------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| [`onecompanion-integration`](skills/onecompanion-integration/SKILL.md) | Adapts a JavaScript or TypeScript game (any engine) to the platform: the `mount()` contract, `game.json`, text in 12 languages and right-to-left, saved data, assets that load in the sandbox, relay and lockstep multiplayer, store listing, art and the publishing CLI. Includes templates and a preflight checker. |
+| [`onecompanion-integration`](skills/onecompanion-integration/SKILL.md) | Adapts a JavaScript or TypeScript game (any engine) to the platform: the `mount()` contract, `game.json`, text in 20 languages and right-to-left, saved data, assets that load in the sandbox, relay and lockstep multiplayer, store listing, art and the publishing CLI. Includes templates and a preflight checker. |
 
 ## Install
 

@@ -37,28 +37,60 @@ function t(key: string, params: Readonly<Record<string, string | number>> = {}):
 		.replace(/\{(\w+)\}/g, (_m, k: string) => String(params[k] ?? ''));
 }
 
-/** Fake relay room: every tab is a player. Real slots come from the platform. */
+/**
+ * Fake relay room: every tab is a player, and tabs announce themselves so each one keeps a roster. Real slots and
+ * names come from the platform; the host is the lowest slot, as there.
+ */
 let online: MountOptions['online'];
 let deliver: (b: Uint8Array) => void = () => {};
+let announce = () => {};
 if (q.get('net') === 'room') {
 	const bc = new BroadcastChannel('oc-dev-room');
-	const slot = Math.floor(Math.random() * 8);
+	const slot = Math.floor(Math.random() * 250);
+	const peers = new Map<number, number>([[slot, Date.now()]]); // slot → last seen
+	const roster = () => {
+		const now = Date.now();
+		for (const [s, seen] of peers) if (s !== slot && now - seen > 5000) peers.delete(s);
+		const slots = [...peers.keys()].sort((a, b) => a - b);
+		const out = [0x02, slot, slots[0]!, slots.length];
+		for (const s of slots) {
+			const name = new TextEncoder().encode(`Player ${s}`);
+			out.push(s, name.length, ...name);
+		}
+		deliver(new Uint8Array(out));
+	};
 	online = {
 		selfId: `dev-${slot}`,
 		// [0x01][to][payload] → others get [0x01][from][payload]
-		send: (b) => bc.postMessage([slot, b[1], b.slice(2)])
+		send: (b) => bc.postMessage({ from: slot, to: b[1], payload: b.slice(2) })
 	};
 	bc.onmessage = (e) => {
-		const [from, to, payload] = e.data as [number, number, Uint8Array];
-		if (to !== 255 && to !== slot) return;
-		const out = new Uint8Array(payload.length + 2);
+		const m = e.data as { from: number; to?: number; payload?: Uint8Array; hello?: boolean };
+		const known = peers.has(m.from);
+		peers.set(m.from, Date.now());
+		if (m.hello) {
+			if (!known) {
+				roster();
+				bc.postMessage({ from: slot, hello: true }); // let the newcomer know about us
+			}
+			return;
+		}
+		if (!m.payload || (m.to !== 255 && m.to !== slot)) return;
+		const out = new Uint8Array(m.payload.length + 2);
 		out[0] = 0x01;
-		out[1] = from;
-		out.set(payload, 2);
+		out[1] = m.from;
+		out.set(m.payload, 2);
 		deliver(out);
 	};
-	const name = new TextEncoder().encode(`Player ${slot}`);
-	queueMicrotask(() => deliver(new Uint8Array([0x02, slot, slot, 1, slot, name.length, ...name])));
+	announce = () => {
+		roster();
+		bc.postMessage({ from: slot, hello: true });
+		// Heartbeat: closed tabs drop out of the roster after a few seconds.
+		setInterval(() => {
+			bc.postMessage({ from: slot, hello: true });
+			roster();
+		}, 2000);
+	};
 }
 
 /** On the platform, saved data is kept by the platform; here, this page's localStorage stands in for it. */
@@ -92,4 +124,5 @@ if (q.get('remount') === '1') {
 	handle = await mount(host, options);
 }
 deliver = (b) => handle.onMessage(b);
+announce(); // after mount, so the game receives its first roster
 document.addEventListener('visibilitychange', () => (document.hidden ? handle.pause() : handle.resume()));

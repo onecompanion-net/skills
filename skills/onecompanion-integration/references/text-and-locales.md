@@ -1,6 +1,7 @@
 # Text, languages and right-to-left
 
-OneCompanion is in 12 languages: `en vi zh-hans hi es fr ar bn pt-br ru ur id`.
+OneCompanion is in 20 languages: the 12 launch locales `en vi zh-hans hi es fr ar bn pt-br ru ur id` and the newer
+`ja ko de tr th fil it pl`.
 
 ## In-game text: `messages/<locale>.json`
 
@@ -55,7 +56,8 @@ Mirror directional UI (back arrows, progress bars) in RTL. Do not mirror gamepla
 
 ## Store listing: `listing/<locale>.json`
 
-Required for **all 12** locales (the catalog shows it in every language):
+Required for the **12 launch** locales, optional for the newer 8 (players there see your English listing until you
+add theirs):
 
 ```json
 {
@@ -76,6 +78,24 @@ Required for **all 12** locales (the catalog shows it in every language):
 | `seoTitle`       | 70                                 |
 | `seoDescription` | 170                                |
 | `coverAlt`       | 160 (describe the cover image)     |
+
+Two optional fields: `play`, the play button's label (≤ 24 characters, e.g. "Defend the hill"), and `modes`, one line
+per mode for the mode cards on the game page (≤ 160 characters each, only modes listed in `game.json`):
+
+```json
+{ "play": "Defend the hill", "modes": { "coop": "Hold the hill with friends.", "solo": "Practise alone." } }
+```
+
+## Translating with the CLI
+
+`onecompanion-game i18n .` (the project's `i18n` script) writes every missing listing and in-game file as a copy of
+English with `"$untranslated": true` at the top, adds keys English gained to files already translated (marking them
+with `"$untranslated": ["key", …]`), and prints a translation prompt. `--locales ja,ko` adds languages to the game
+itself (in-game text too, and to `game.json` `locales`); `--locales all` adds every platform language.
+
+Translate each marked file (the values only, keys and `{placeholders}` unchanged, plural categories the language
+needs), then **delete its `$untranslated` line**. `validate` only notes marked files; `publish` and the platform
+refuse them, so never remove a marker from a file you did not translate.
 
 No markup (`<`, `>`). Translate properly, keeping the game's name as the studio wants it. If you translate, tell the
 user which locales you wrote so a native speaker can review them; reviewers check that text reads naturally.
