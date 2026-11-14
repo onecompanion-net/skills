@@ -1,0 +1,16 @@
+{
+	"name": "onecompanion-skills",
+	"description": "Agent skills for building and publishing games on OneCompanion (onecompanion.net).",
+	"owner": {
+		"name": "OneCompanion",
+		"url": "https://onecompanion.net/developers"
+	},
+	"plugins": [
+		{
+			"name": "onecompanion",
+			"source": "./",
+			"description": "Integrate browser games with the OneCompanion platform: the mount() contract, game.json, i18n, storage, multiplayer rooms, assets and the publishing CLI.",
+			"category": "Developer Tools"
+		}
+	]
+}

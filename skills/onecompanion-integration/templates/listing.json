@@ -1,0 +1,11 @@
+{
+	"tagline": "One line that sells the game (max 120 characters).",
+	"pitch": "Two sentences on what you do and why it is fun (max 240 characters).",
+	"about": [
+		"How to play, in a short paragraph (max 600 characters).",
+		"What makes it worth coming back to (up to 4 paragraphs)."
+	],
+	"seoTitle": "Your Game (max 70 characters)",
+	"seoDescription": "Search-result description (max 170 characters).",
+	"coverAlt": "What the cover image shows (max 160 characters)."
+}

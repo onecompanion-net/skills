@@ -1,0 +1,34 @@
+{
+	"$comment": "Replace id (ask the user: it is the URL and can never be reused), title, studio (the studio handle) and every value below with the game's real ones.",
+	"manifest": 1,
+	"id": "your-game-id",
+	"title": "Your Game",
+	"version": "1.0.0",
+	"studio": "your-studio",
+	"genres": ["action"],
+	"players": { "min": 1, "max": 4 },
+	"modes": ["solo", "coop"],
+	"entry": { "client": "./src/client.ts" },
+	"realtime": { "kind": "relay", "tickRate": 0, "snapshotRate": 0, "protocol": 1 },
+	"locales": ["en"],
+	"messages": "./messages",
+	"listing": "./listing",
+	"media": {
+		"cover": "./art/cover.webp",
+		"stills": ["./art/still-a.webp", "./art/still-b.webp", "./art/still-c.webp"],
+		"share": "./art/share.jpg"
+	},
+	"budgets": { "clientGzipKB": 200 },
+	"capabilities": {
+		"pointerLock": false,
+		"fullscreen": false,
+		"gamepad": false,
+		"audio": true,
+		"network": []
+	},
+	"rating": { "level": "everyone", "descriptors": [] },
+	"rights": {
+		"ownsAllContent": true,
+		"thirdParty": []
+	}
+}
