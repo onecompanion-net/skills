@@ -68,3 +68,10 @@ node skills/onecompanion-integration/scripts/preflight.mjs path/to/your-game
 
 The developer guide at `https://onecompanion.net/developers/guide.md` is the contract. When the guide and a skill
 disagree, the guide wins; please open an issue.
+
+
+## License
+
+[PolyForm Shield License 1.0.0](LICENSE.md) with the OneCompanion Games Exception (see [NOTICE.md](NOTICE.md)).
+Build, test and publish games with it, and ship your games anywhere. Do not use it to build or run a competing
+game platform, hosting or multiplayer service, or developer tools or AI skills for one.

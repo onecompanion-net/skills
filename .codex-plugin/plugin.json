@@ -2,12 +2,20 @@
 	"name": "onecompanion",
 	"version": "0.1.0",
 	"description": "Integrate browser games with the OneCompanion games platform and get them ready to publish.",
+	"license": "PolyForm-Shield-1.0.0",
 	"author": {
 		"name": "OneCompanion",
 		"url": "https://onecompanion.net/developers"
 	},
 	"homepage": "https://onecompanion.net/developers",
 	"repository": "https://github.com/onecompanion-net/skills",
-	"keywords": ["onecompanion", "gamedev", "browser-games", "multiplayer", "i18n", "publishing"],
+	"keywords": [
+		"onecompanion",
+		"gamedev",
+		"browser-games",
+		"multiplayer",
+		"i18n",
+		"publishing"
+	],
 	"skills": "./skills/"
 }
