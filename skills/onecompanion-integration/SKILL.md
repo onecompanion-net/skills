@@ -1,6 +1,6 @@
 ---
 name: onecompanion-integration
-description: Integrate a browser game (JavaScript or TypeScript, any engine) with the OneCompanion games platform and get it ready to upload: the mount()/dispose() client contract, game.json, in-game text through t() with ICU plurals and right-to-left layout, saved data through options.storage, assets that load inside the sandboxed frame, relay/lockstep/server multiplayer byte protocols, the store listing (12 required locales of 20, with the CLI's i18n command), art, rights, size budgets, and the onecompanion-game CLI (validate, publish, release). Use this whenever someone wants to publish, port, upgrade, adapt or "make work on" OneCompanion (onecompanion.net), mentions game.json, mount(host, options), onecompanion-game, the OneCompanion studio page or developer guide, or is building a game they plan to put on OneCompanion, even if they only say "the platform" in a project that has a game.json with "manifest": 1.
+description: Integrate a browser game (JavaScript or TypeScript, any engine) with the OneCompanion games platform and get it ready to upload: the mount()/dispose() client contract, game.json, in-game text through t() with ICU plurals and right-to-left layout, saved data through options.storage, assets that load inside the sandboxed frame, relay/lockstep/server multiplayer byte protocols, scores and rewards (game.json economy, economy.json, options.config/economy/assets, casual and verified-solo boards, the persistent level with characters, loot and trades), the store listing (12 required locales of 20, with the CLI's i18n command), art, rights, size budgets, and the onecompanion-game CLI (validate, publish, release). Use this whenever someone wants to publish, port, upgrade, adapt or "make work on" OneCompanion (onecompanion.net), mentions game.json, mount(host, options), onecompanion-game, the OneCompanion studio page or developer guide, or is building a game they plan to put on OneCompanion, even if they only say "the platform" in a project that has a game.json with "manifest": 1.
 ---
 
 # OneCompanion integration
@@ -32,8 +32,8 @@ Work in this order. Do not skip the plan.
    - where player-facing text lives; how it saves; any network code; asset types and how they are loaded;
    - which room kind fits (see below); anything that cannot work in the sandbox (see `references/engines.md`).
    Ask the user for the game `id` (it becomes the URL and can **never** be reused) and their studio handle.
-   No game yet? `bunx github:onecompanion-net/game-cli init <dir> --template solo|relay|lockstep` writes a small
-   playable game on the contract that passes `validate`; build on it instead of these steps.
+   No game yet? `bunx github:onecompanion-net/game-cli init <dir> --template solo|relay|lockstep|verified-solo|persistent-rpg`
+   writes a small playable game on the contract that passes `validate`; build on it instead of these steps.
 2. **Contract.** Copy `templates/contract.ts` into `src/contract.ts`. Make a client entry (`src/client.ts`) that exports
    `mount(host, options)` and returns `{ onMessage, pause, resume, dispose }`. Start from `templates/client.ts`. Keep
    the game's existing standalone entry working if it has one: the platform only builds `entry.client`.
@@ -48,15 +48,18 @@ Work in this order. Do not skip the plan.
 7. **Network.** Remove every `fetch`/WebSocket/XHR to other hosts. For multiplayer use `options.online.send()` and
    `onMessage()` with the exact byte formats in `references/multiplayer.md`; templates: `templates/relay.ts`,
    `templates/lockstep.ts`.
-8. **Package.** Write `game.json` (start from `templates/game.json`; fields in `references/manifest.md`),
+8. **Scores and rewards.** Report facts, never grant: a `server` module ends matches with a `MatchResult` and may
+   emit milestones; solo games can ask for a casual board. Declare keys in `game.json` `economy`; the studio sets
+   values in `economy.json` (`economy init`). Details: `references/economy.md`.
+9. **Package.** Write `game.json` (start from `templates/game.json`; fields in `references/manifest.md`),
    `listing/en.json` (with `play` and `modes` lines if they fit), the art at exact sizes, the rating, and `rights` with
    every third-party asset and licence. Then run the `i18n` script and translate every file it marks
    `$untranslated` (the 12 launch locales are required), deleting each marker as you finish that file.
-9. **Test locally.** Copy `templates/dev/` (an `index.html` and `dev.ts` host): solo, `?net=room` in two tabs (relay),
+10. **Test locally.** Copy `templates/dev/` (an `index.html` and `dev.ts` host): solo, `?net=room` in two tabs (relay),
    `?lang=vi`, `?dir=rtl`.
-10. **Check.** Run `node <this skill>/scripts/preflight.mjs .` (or `bun …`) for the traps the CLI cannot see, then the
-    project's `validate` script. Fix every issue until both pass.
-11. **Stop before publishing.** Summarise what changed, what could not be done and what the user should test by hand.
+11. **Check.** Run `node <this skill>/scripts/preflight.mjs .` (or `bun …`) for the traps the CLI cannot see, then the
+    project's `validate` script (and `test` for a `server` game). Fix every issue until all pass.
+12. **Stop before publishing.** Summarise what changed, what could not be done and what the user should test by hand.
     The user publishes (`references/publishing.md`).
 
 ## Non-negotiables
@@ -76,6 +79,7 @@ Work in this order. Do not skip the plan.
 - **Never disguise files** (renaming a `.glb` to `.json`, base64-stuffing a banned type) to get past the type check.
   Reviewers reject it. Tell the user what does not fit; they can ask the platform team.
 - **Respect players:** no ads, payments, tracking or collection of personal data; rating must match the content.
+- **Never grant rewards from game code** or show reward toasts of your own: report facts, the platform pays out.
 
 ## Choosing a room kind (`realtime.kind`)
 
@@ -103,6 +107,7 @@ Read the one you need when you reach that step:
 | `references/storage.md`            | `options.storage`, the `localStorage` stand-in, limits                         |
 | `references/multiplayer.md`        | roster, relay, lockstep byte formats and patterns, rate limits                 |
 | `references/server-kind.md`        | `createGameModule()` for invited studios                                       |
+| `references/economy.md`            | scores, rewards, config, shops, casual and ranked solo, the persistent level    |
 | `references/engines.md`            | porting notes per engine and what cannot run in the sandbox                    |
 | `references/publishing.md`         | CLI commands, version states, review checklist, error codes                    |
 

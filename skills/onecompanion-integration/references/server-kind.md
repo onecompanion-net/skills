@@ -16,9 +16,9 @@ export function createGameModule(): GameModule {
 	return {
 		config: { gameId: 'your-game', maxPlayers: 8, tickRate: 20, snapshotRate: 10, teams: [], modes: ['ffa'] },
 		init(c, settings) {
-			ctx = c; // settings: { mode, map, maxPlayers, private, options? }
+			ctx = c; // settings: { mode, map, maxPlayers, private, options?, config? }
 		},
-		onJoin(player) {}, // { id, displayName, locale, team }
+		onJoin(player) {}, // { id, displayName, locale, team, loadout?, character? }
 		onLeave(playerId) {},
 		onInput(playerId, data) {}, // raw client bytes, ≤ 1024: validate everything, trust nothing
 		tick(dt) {}, // fixed steps of 1 / tickRate seconds
@@ -37,12 +37,19 @@ Events (`ctx.emit`):
 - `{ kind: 'notice', key, params? }`: `key` matches `^[a-z][a-z0-9_]{0,63}$`. Text from the server is always a key
   plus params, never prose.
 - `{ kind: 'end', result: { winnerTeam, players: [{ playerId, team, score, stats }] } }`: a match ended; every
-  `playerId` must be in the room, scores finite.
+  `playerId` must be in the room, scores finite. Stats use platform keys or declared `g_` keys; this result is what
+  the studio's ruleset scores and rewards.
+- `{ kind: 'milestone', playerId, key: 'g_…', value? }`: a moment inside a match (declared in `economy.milestones`).
+- Persistent level only: `character`, `grant`, `consume`, `travel`, plus optional `onPlatform(event)`,
+  `checkpoint()` and `restore(bytes)` on the module. See `references/economy.md`.
 
 Limits per room step: replies ≤ 64 KB of sends, ≤ 16 events, ≤ 512 inputs, ≤ 1024 bytes per input. A module that
 throws, runs too long or breaks a limit gets strikes; repeated strikes close rooms and suspend the game automatically.
 The isolate can lose its memory; the room then calls `init` again and re-joins every player, so keep all state inside
 the module object and make `init` + joins rebuild a playable state.
+
+Test it headless before uploading: `onecompanion-game test .` (through the project's scripts) fuzzes the module
+and lists what the platform would refuse.
 
 Design: keep `isIdle()` true when no players are present (no tick loops in empty rooms), send compact binary
 snapshots (quantised positions, deltas), and validate inputs against the player's own entity only.

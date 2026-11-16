@@ -18,7 +18,7 @@ const dir = resolve(args.find((a) => !a.startsWith('--')) ?? '.');
 
 /** Listing text is required for the 12 launch locales; the platform's 8 newer locales are optional. */
 const LOCALES = ['en', 'vi', 'zh-hans', 'hi', 'es', 'fr', 'ar', 'bn', 'pt-br', 'ru', 'ur', 'id'];
-const ALLOWED = new Set(['js', 'json', 'wasm', 'webp', 'png', 'jpg', 'jpeg', 'ogg', 'mp3', 'woff2']);
+const ALLOWED = new Set(['js', 'json', 'wasm', 'webp', 'png', 'jpg', 'jpeg', 'avif', 'ktx2', 'glb', 'ogg', 'mp3', 'woff2']);
 const CODE = /\.(ts|tsx|js|jsx|mjs|svelte|vue)$/;
 const SKIP_DIR = /^(node_modules|dist|bundle|build|out|coverage|\..+)$/;
 const SKIP_FILE = /(\.test\.|\.spec\.|(^|\/)dev\.(ts|js)$|\.d\.ts$|(^|\/)vite\.config\.|(^|\/)preflight\.mjs$)/;
@@ -81,7 +81,7 @@ const RULES = [
 	[/\b(indexedDB|sessionStorage)\b/, 'error', 'no IndexedDB/sessionStorage in the frame: use options.storage'],
 	[/\blocalStorage\b/, 'warn', 'localStorage is a stand-in whose writes are not confirmed: prefer options.storage for saves'],
 	[/\bwindow\.open\s*\(|\b(top|parent)\.location\b|\blocation\.(href|assign|replace)\s*[=(]/, 'error', 'pop-ups and navigation are blocked in the frame'],
-	[/\b(alert|confirm|prompt)\s*\(/, 'warn', 'alert/confirm/prompt do not work in the sandbox: build an in-game dialog'],
+	[/(?<![\w$.])(?:(?:window|globalThis)\.)?(alert|confirm|prompt)\s*\((?![^)]*\)\s*:)/, 'warn', 'alert/confirm/prompt do not work in the sandbox: build an in-game dialog'],
 	[/navigator\.serviceWorker/, 'error', 'service workers are not available in the frame'],
 	[/new\s+URL\s*\(\s*[`'"][^`'"]+[`'"]\s*,\s*import\.meta\.url/, 'error', 'new URL("literal", import.meta.url) is not bundled by Bun: import the file, then new URL(imported, import.meta.url)'],
 	[/(?:^|[^\w$.])online\s*!\s*\.\s*send|options\.online\.send|\bo\.online\.send/, 'warn', 'send without a solo guard: use online?.send (sending in solo is a strike)'],
@@ -133,7 +133,7 @@ for (const f of files) {
 			const ext = m[2].toLowerCase();
 			const path = m[1];
 			if (/^https?:\/\//.test(path)) {
-				if (/\.(png|jpe?g|webp|gif|svg|mp3|ogg|wav|glb|gltf|woff2?|ttf|json|wasm|js)$/i.test(path))
+				if (/\.(png|jpe?g|webp|avif|ktx2|gif|svg|mp3|ogg|wav|glb|gltf|woff2?|ttf|json|wasm|js)$/i.test(path))
 					add('error', rel, i + 1, `remote asset ${path}: nothing outside the bundle is reachable`);
 				continue;
 			}

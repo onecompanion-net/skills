@@ -28,6 +28,11 @@ Bun 1.3+ must be installed even with npm. Run the CLI through these scripts (`bu
 | `onecompanion-game publish .`           | Packs, uploads every file and submits the version for review         |
 | `onecompanion-game release <versionId>` | Releases an approved version, or rolls back to an earlier one        |
 | `onecompanion-game status <versionId>`  | State, automatic issues and review notes                             |
+| `onecompanion-game test .`              | Runs a `server` module headless with random input; lists refusals    |
+| `onecompanion-game economy init .`      | A starter `economy.json` for the game's preset (offline)             |
+| `onecompanion-game economy loot <table>`| Expected drops from a loot table against the hourly caps (offline)   |
+| `onecompanion-game economy pull\|validate\|simulate\|push .` | The ruleset as code; a push saves a draft, an owner publishes it |
+| `onecompanion-game assets push <folder> --licence own` | Uploads art into the asset library's draft release |
 
 Upload commands read `ONECOMPANION_API` (the site, default `https://onecompanion.net`) and `ONECOMPANION_TOKEN` (a
 studio token from the studio page), or `--api` / `--token`. **The user runs these; you do not handle the token.**

@@ -19,6 +19,10 @@ export async function mount(host: HTMLElement, options: MountOptions): Promise<G
 | `params`   | `Record<string, string>`                 | Optional launch parameters. Treat as untrusted.                                         |
 | `onEvent`  | `(event) => void`                        | Coarse lifecycle events (below).                                                        |
 | `storage`  | `GameStorage \| undefined`               | Saved data kept by the platform. Can be absent: always guard.                           |
+| `assets`   | `GameAssets \| undefined`                | The studio's asset library: `url(path)` (or `null`) and `paths()`.                      |
+| `config`   | `Record<string, unknown> \| undefined`   | Values the studio tunes (`economy.config` in `game.json`). Read once per session.        |
+| `economy`  | `GameEconomy \| undefined`               | Progress, shop, equip, codes; the platform checks every call (`economy.md`).             |
+| `trade`    | `GameTrade \| undefined`                 | Persistent games only: trades with another player in the room (`economy.md`).           |
 
 ## GameHandle (what mount returns)
 
@@ -37,7 +41,7 @@ Only these shapes leave the frame; anything else is dropped and counts as a malf
 | ---------------------------------------- | ------------------------------------------------------------------------- |
 | `{ type: 'ready' }`                      | Send after the **first frame is drawn**. No `ready` within 20 s = fatal. |
 | `{ type: 'state', state }`               | `state` matches `/^[a-z_]{1,24}$/`: `menu`, `playing`, `game_over`.      |
-| `{ type: 'complete', seconds }`          | A run or match ended; finite number, rounded.                             |
+| `{ type: 'complete', seconds, score? }`  | A run or match ended; finite numbers, rounded. `score` feeds a casual board. |
 | `{ type: 'fatal', message }`             | The game cannot continue. ≤ 200 chars, no personal data.                  |
 
 Never put player names, chat or other user text in events.

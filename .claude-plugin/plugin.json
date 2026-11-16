@@ -1,7 +1,7 @@
 {
 	"name": "onecompanion",
 	"displayName": "OneCompanion",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Integrate browser games with the OneCompanion games platform and get them ready to publish.",
 	"license": "PolyForm-Shield-1.0.0",
 	"author": {

@@ -37,14 +37,16 @@ Only these are stored and served (anything else fails validation):
 | code   | `.js`           |
 | data   | `.json`         |
 | wasm   | `.wasm`         |
-| images | `.webp` `.png` `.jpg` `.jpeg` |
+| images | `.webp` `.png` `.jpg` `.jpeg` `.avif` |
+| models and textures | `.glb` (buffers and images embedded) `.ktx2` |
 | audio  | `.ogg` `.mp3`   |
 | fonts  | `.woff2`        |
 
-**Not accepted:** `.css`, `.html`, `.svg`, `.gif`, `.wav`, `.glb`/`.gltf`/`.bin`, `.ktx2`, `.basis`, `.mp4`/`.webm`,
+**Not accepted:** `.css`, `.html`, `.svg`, `.gif`, `.wav`, `.gltf`/`.bin` (use one `.glb` with everything embedded), `.basis`, `.mp4`/`.webm`,
 `.ttf`/`.otf`/`.woff`, `.txt`, `.data`, `.pck`, `.unityweb`, source maps. Convert: WAV → OGG or MP3, GIF/SVG →
-PNG/WebP, TTF → WOFF2. A 3D model format has no direct path today: build geometry in code, or tell the user (do not
-rename files to pass the check). Every file's first bytes must match its extension, and text files must be UTF-8.
+PNG/WebP, TTF → WOFF2, glTF + .bin → one `.glb` with embedded buffers and textures. Do not rename files to pass
+the check. Large art can live in the studio's **asset library** instead of the bundle (`assets push`, loaded with
+`options.assets.url(path)`), so it changes without a new version. Every file's first bytes must match its extension, and text files must be UTF-8.
 
 ## CSS
 

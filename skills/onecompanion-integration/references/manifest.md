@@ -10,9 +10,9 @@ Two shapes share one schema. The **source** manifest is what you write (entries 
 | `title`                    | 1 to 40 characters (the catalog localises via the listing, not this).                                  |
 | `version`                  | semver (`1.0.0`, `1.2.0-beta.1`). **Higher than every earlier upload, including rejected ones.**        |
 | `studio`                   | the studio handle, `^[a-z][a-z0-9-]{1,31}$`; must match the token's studio.                             |
-| `genres`                   | 1 to 3 of `action`, `shooter`, `idle`, `rpg`.                                                          |
+| `genres`                   | 1 to 3 of `action`, `shooter`, `idle`, `rpg`, `sim`, `app`.                                            |
 | `players`                  | `{ min, max }`, integers, `min ≤ max`; **max ≤ 16** for hosted games.                                  |
-| `modes`                    | 1+ of `solo`, `coop`, `ffa`, `tdm`. Kind `none` → only `solo`. Any room kind → at least one room mode.  |
+| `modes`                    | 1+ of `solo`, `coop`, `ffa`, `tdm`, `race`, `trial`. Kind `none` → only `solo`; a room kind needs a room mode. |
 | `entry.client`             | relative path to your client entry (`./src/client.ts`).                                                |
 | `entry.server`             | only for kind `server`.                                                                                |
 | `realtime`                 | `{ kind, tickRate, snapshotRate, protocol }`; see below. Omit for solo-only (kind defaults to `none`).  |
@@ -25,6 +25,8 @@ Two shapes share one schema. The **source** manifest is what you write (entries 
 | `budgets.clientGzipKB`     | ≤ 450. The client entry plus its **static** imports, gzipped, must fit. Set it near your real size.     |
 | `capabilities`             | `pointerLock`, `fullscreen`, `gamepad`, `audio` booleans; `network` must be `[]`.                       |
 | `rating`                   | `{ level: everyone \| teen \| mature, descriptors: string[] (≤ 8, ≤ 40 chars) }`. *Required for upload.* |
+| `economy`                  | optional: preset, stats, milestones, slots, config, attributes, casual, persistent (`references/economy.md`). |
+| `assets.required`          | optional: asset library paths your code cannot run without; a version is refused if the live release lacks one. |
 | `rights`                   | `{ ownsAllContent: true, thirdParty: [{ name, licence, url }] }` (≤ 50). *Required for upload.*         |
 
 The 20 platform locales: the 12 launch locales `en vi zh-hans hi es fr ar bn pt-br ru ur id` (listing required) and
