@@ -20,7 +20,10 @@ The live developer guide is the contract: `https://onecompanion.net/developers/g
 how-to, the traps and the templates; if it disagrees with the live guide or with the CLI's output, the guide and the
 CLI win. Tell the user this skill may be out of date when that happens.
 
-The sample game, a small complete relay game, is `https://github.com/onecompanion-net/sample-game` (Paint Party).
+The sample game is `https://github.com/onecompanion-net/sample-game` (Paint Party): a small complete relay game that
+uses every client feature (text and RTL, rooms, storage, config, the economy and shop, the asset library, a casual
+board) with an `economy.json`. Its README maps each feature to the code. Server-only features live in the CLI's
+`verified-solo` and `persistent-rpg` templates.
 
 ## Workflow
 
